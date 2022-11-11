@@ -36,7 +36,7 @@ const ItemCtrl = (function () {
 
 const UICtrl = (function () {
     const UISelectors = {
-        itemList: '#item-list',
+        ItemList: '#item-list',
         ItemNameInput: '#item-name',
         ItemCaloriesInput: '#item-calories',
         addBtn: '.add-btn',
@@ -45,9 +45,9 @@ const UICtrl = (function () {
         populateItemList: function (items) {
             let html = '';
             items.forEach(function (item) {
-                html += `<li class="collection-item" id="item ${item.id}"><strong>${item.name} </strong><em>${item.calories}</em><a href="#" class="secondary-content"><i class="edit-item fa fa-pencil"></i></a></li>`
+                html += `<li class="collection-item" id="item ${item.id}"><strong>${item.name}: </strong><em>${item.calories}</em><a href="#" class="secondary-content"><i class="edit-item fa fa-pencil"></i></a></li>`
             });
-            document.querySelector(UISelectors.itemList).innerHTML = html;
+            document.querySelector(UISelectors.ItemList).innerHTML = html;
         },
         getSelectors: function () {
             return UISelectors
@@ -57,6 +57,17 @@ const UICtrl = (function () {
                 name: document.querySelector(UISelectors.ItemNameInput).value,
                 calories: document.querySelector(UISelectors.ItemCaloriesInput).value
             }
+        },
+        addListItem: function (item){
+            const li = document.createElement('li');
+            li.className = 'collection-item';
+            li.id = `item${item.id}`;
+            li.innerHTML = `<strong>${item.name}: </strong><em>${item.calories} Calories</em><a href="#" class="secondary-content"><i class="edit-item fa fa-pencil"></i></a>`
+            document.querySelector(UISelectors.ItemList).insertAdjacentElement('beforeend', li)
+        },
+        clearInput: function (){
+            document.querySelector(UISelectors.ItemNameInput).value = '';
+            document.querySelector(UISelectors.ItemCaloriesInput). value = '';
         }
     }
 })();
@@ -70,7 +81,8 @@ const App = (function (ItemCtrl, UICtrl) {
         const input = UICtrl.getITemInput()
         if (input.name !== '' && input.calories !== ''){
            const newItem = ItemCtrl.addItem(input.name, input.calories)
-            console.log(newItem)
+            UICtrl.addListItem(newItem)
+            UICtrl.clearInput();
         }
         event.preventDefault()
 
